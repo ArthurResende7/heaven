@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMove : MonoBehaviour
 {
 
     private Rigidbody rb;
-    private Transform trans;
 
     private Vector3 startPosition;
 
@@ -20,14 +20,18 @@ public class PlayerMove : MonoBehaviour
 
     public float gravityScale = 5.0f;
 
+    private bool hasKey;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        trans = GetComponent<Transform>();
+        
         startPosition = new Vector3(0, 4, 0);
         jumping = false;
         jumpTimes = 0;
+
+        hasKey = false;
     }
 
     // Update is called once per frame
@@ -39,11 +43,6 @@ public class PlayerMove : MonoBehaviour
         {
             jumping = true;
             jumpTimes++;
-        }
-
-        if (trans.position.y <= -10)
-        {
-            trans.position = startPosition;
         }
     }
 
@@ -62,5 +61,24 @@ public class PlayerMove : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         jumpTimes = 0;
+        if (!other.gameObject.CompareTag("Checkpoint") && !other.gameObject.CompareTag("Key"))
+        {
+            transform.SetParent(other.transform);
+        }
+        if (other.gameObject.CompareTag("Key"))
+        {
+            hasKey = true;
+            Destroy(other.gameObject);
+        }
+        if (other.gameObject.CompareTag("Finish") && hasKey)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
     }
+
+    private void OnCollisionExit(Collision other)
+    {
+        transform.SetParent(null);
+    }
+
 }
