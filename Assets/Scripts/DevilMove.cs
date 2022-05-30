@@ -33,7 +33,7 @@ public class DevilMove : MonoBehaviour
         {
             animator.SetBool("AttackPlayer", false);
             animator.SetBool("PlayerNearby", true);
-            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, 0.01f);
+            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, 0.05f);
             transform.LookAt(player.transform);
         }
         if (dist > followThreshold)
@@ -42,7 +42,7 @@ public class DevilMove : MonoBehaviour
             animator.SetBool("PlayerNearby", false);
             if (!transform.position.Equals(startPosition))
             {
-                transform.position = Vector3.MoveTowards(transform.position, startPosition, 0.01f);
+                transform.position = Vector3.MoveTowards(transform.position, startPosition, 0.05f);
             }
         }
     }
